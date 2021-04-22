@@ -1,0 +1,14 @@
+[Unit]
+Description=Gather ACPI data
+# If we have a bootcounter, run after it
+After=bootcounter.service
+# If this is a hibernation, run after we wake up
+After=hibernate.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/acpi-data-gather /var/local/acpi-data-gather
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=hibernate.target

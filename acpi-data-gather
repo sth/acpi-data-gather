@@ -1,0 +1,35 @@
+#!/bin/bash
+set -u
+
+DATADIR="$1"
+
+BOOTNUM=0
+# In case bootcounter.service is installed, read its counter file:
+if [ -e /var/lib/counterfiles/boot.count ]; then
+	BOOTNUM="$(cat /var/lib/counterfiles/boot.count)"
+fi
+
+N=1
+while [[ -e "$DATADIR/$BOOTNUM-$N" ]]; do
+	N=$(( N + 1 ))
+done
+
+function archive() {
+	SIZE=$(stat --format='%s' "$1")
+	if (( SIZE < 1048576 )); then
+		cp "$1" "$2"
+	elif [ -e /usr/bin/pigz ]; then
+		/usr/bin/pigz -c "$1" > "$2.gz"
+	else
+		gzip -c "$1" > "$2.gz"
+	fi
+}
+
+mkdir "$DATADIR/$BOOTNUM-$N"
+cd "$DATADIR/$BOOTNUM-$N"
+
+dmesg > dmesg
+dmidecode > dmidecode
+cp -r /sys/firmware/acpi/tables tables
+archive /var/log/kern.log kern.log
+archive /var/log/syslog syslog
