@@ -5,8 +5,8 @@ DATADIR="$1"
 
 BOOTNUM=0
 # In case bootcounter.service is installed, read its counter file:
-if [ -e /var/lib/counterfiles/boot.count ]; then
-	BOOTNUM="$(cat /var/lib/counterfiles/boot.count)"
+if [ -e /var/lib/bootcounter.count ]; then
+	BOOTNUM="$(cat /var/lib/bootcounter.count)"
 fi
 
 N=1
