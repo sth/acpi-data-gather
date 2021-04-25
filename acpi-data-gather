@@ -1,6 +1,11 @@
 #!/bin/bash
 set -u
 
+if (( $# != 1 )); then
+	echo "usage: $0 DATADIR" >/dev/stderr
+	exit 1
+fi
+
 DATADIR="$1"
 
 BOOTNUM=0
@@ -25,8 +30,8 @@ function archive() {
 	fi
 }
 
-mkdir "$DATADIR/$BOOTNUM-$N"
-cd "$DATADIR/$BOOTNUM-$N"
+mkdir "$DATADIR/$BOOTNUM-$N" || exit 1
+cd "$DATADIR/$BOOTNUM-$N" || exit 1
 
 dmesg > dmesg
 dmidecode > dmidecode
