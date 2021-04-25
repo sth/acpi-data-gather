@@ -8,5 +8,6 @@ run() {
 	"$@"
 }
 
+run mkdir -fp /var/local/acpi-data-gather
 run cp acpi-data-gather /usr/local/bin
 run cp acpi-data-gather.service /etc/systemd/system
