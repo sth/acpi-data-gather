@@ -1,5 +1,5 @@
 #!/bin/bash
-set -u
+set -eu
 
 if (( $# != 1 )); then
 	echo "usage: $0 DATADIR" >/dev/stderr
@@ -34,8 +34,10 @@ function archive() {
 	fi
 }
 
-mkdir "$OUTDIR" || exit 1
-cd "$OUTDIR" || exit 1
+mkdir "$OUTDIR"
+cd "$OUTDIR"
+
+set +e
 
 dmesg > dmesg
 dmidecode > dmidecode
