@@ -8,16 +8,20 @@ fi
 
 DATADIR="$1"
 
-BOOTNUM=0
 # In case bootcounter.service is installed, read its counter file:
 if [ -e /var/lib/bootcounter.count ]; then
 	BOOTNUM="$(cat /var/lib/bootcounter.count)"
+	OUTPREFIX="$DATADIR/$BOOTNUM-"
+else
+	OUTPREFIX="$DATADIR/"
 fi
 
 N=1
-while [[ -e "$DATADIR/$BOOTNUM-$N" ]]; do
+while [[ -e "$OUTPREFIX$N" ]]; do
 	N=$(( N + 1 ))
 done
+
+OUTDIR="$OUTPREFIX$N"
 
 function archive() {
 	SIZE=$(stat --format='%s' "$1")
@@ -30,8 +34,8 @@ function archive() {
 	fi
 }
 
-mkdir "$DATADIR/$BOOTNUM-$N" || exit 1
-cd "$DATADIR/$BOOTNUM-$N" || exit 1
+mkdir "$OUTDIR" || exit 1
+cd "$OUTDIR" || exit 1
 
 dmesg > dmesg
 dmidecode > dmidecode
